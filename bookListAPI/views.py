@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 # from django.http import JsonResponse
 # from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
@@ -165,3 +165,39 @@ class BookViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         return Response({"message": "Deleting a book"}, status.HTTP_200_OK)
+
+
+# class MenuItemView (generics.ListAPIView, generics.CreateAPIView)
+# or we can use ListCreateAPIView
+# class MenuItemView(generics.ListCreateAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+# This if we want to make a permission for the whole class methods
+#     Permission_classes = [IsAuthenticated]
+
+
+# if we want to make a permission for one or more methods
+# we can use/override the permission_classes attribute
+#     def get_permissions(self):
+#         permission_classes = []
+#         if self.request.method != 'GET':
+#             permission_classes = [IsAuthenticated]
+#         return [permission() for permission in permission_classes]
+
+# Return items for the authenticated user only if the user is authenticated
+# class OrderView(generics.ListCreateAPIView):
+#      queryset = Order.objects.all()
+#      serializer_class = OrderSerializer
+#      permission_classes = [IsAuthenticated]
+# We can override the get_queryset method to make a filter for the user
+#      def get_queryset(self):
+#         return Order.objects.all().filter(user=self.request.user)
+
+# returns a simple static response instead of the resources
+# class OrderView(generics.ListCreateAPIView):
+#     queryset = Order.objects.all()
+#     serializer_class = OrderSerializer
+#     def get(self, request, *args, **kwargs):
+#         return Response(‘new response’)
+
+# Though generic views automate everything, you still have full scope to change the default behavior by overriding any of the default methods
