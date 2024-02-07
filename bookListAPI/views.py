@@ -76,8 +76,11 @@ class BookList(APIView):
             return Response(model_to_dict(book), status=HTTP_200_OK)
         else:
             title = request.GET.get('title')
+            author = request.GET.get('author')
             if title:
                 books = Book.objects.filter(title=title)
+            elif author:
+                books = Book.objects.filter(author=author)
             else:
                 books = Book.objects.all()
             books_dict = {'books': list(books.values())}
